@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nika 🌸</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #fdf0f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 0px 32px 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: -30px;
+        }
+
+        /* ── Avatar ── */
+        .avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 28px;
+            border: 4px solid #ffffff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* ── Heading ── */
+        h1 {
+            font-size: 2.1rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+
+        /* ── Subtext ── */
+        .bio {
+            font-size: 16px;
+            color: #4a4a4a;
+            line-height: 1.65;
+            margin-bottom: 32px;
+        }
+
+        /* ── Buttons ── */
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: 300px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            background-color: #f06292;
+            color: #ffffff;
+            padding: 18px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.05rem;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.15s cubic-bezier(0,0,0.5,1);
+        }
+        .btn:hover { background-color: #e64a8a; }
+        .btn:active { transform: scale(0.96); }
+
+        /* ── Loading / Error ── */
+        .status {
+            font-size: 0.85rem;
+            color: #4a4a4a;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- Avatar: gleiche Datei wie index.html, oder durch eigenes Bild ersetzen -->
+        <img class="avatar" src="mee.png" alt="Profilbild">
+
+        <h1>Nika 🌸</h1>
+        <p class="bio">Yes, you found my links!</p>
+
+        <div class="buttons" id="buttons">
+            <p class="status">Einen Moment…</p>
+        </div>
+
+    </div>
+
+    <script>
+        async function loadLinks() {
+            try {
+                const res = await fetch('/api/links');
+                if (!res.ok) throw new Error('Fehler beim Laden');
+                const data = await res.json();
+
+                const container = document.getElementById('buttons');
+                container.innerHTML = '';
+
+                data.buttons.forEach(btn => {
+                    const a = document.createElement('a');
+                    a.href = `/api/go/${btn.id}`;
+                    a.textContent = btn.label;
+                    a.className = 'btn';
+                    container.appendChild(a);
+                });
+            } catch (err) {
+                document.getElementById('buttons').innerHTML =
+                    '<p class="status">Links konnten nicht geladen werden.</p>';
+            }
+        }
+
+        loadLinks();
+    </script>
+</body>
+</html>
